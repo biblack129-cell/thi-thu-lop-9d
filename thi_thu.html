@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Thi Thử Tổng Hợp Giữa Kì I - Lớp 9</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-radio:checked + label { background-color: #eff6ff; border-color: #2563eb; color: #1d4ed8; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+    <!-- Header -->
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="goHome()">
+                <div class="bg-white text-indigo-700 font-black px-3 py-1 rounded-lg text-xl shadow">9</div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">HỆ THỐNG THI THỬ GIỮA KÌ I</h1>
+                    <p class="text-xs text-indigo-200" id="current-subject-label">Chọn môn thi để bắt đầu</p>
+                </div>
+            </div>
+            <div id="timer-box" class="bg-indigo-800 border border-indigo-500/30 px-4 py-1.5 rounded-xl text-right hidden">
+                <span class="text-[10px] text-indigo-200 block uppercase tracking-wider">Thời gian còn lại</span>
+                <span id="timer" class="font-mono text-xl font-bold text-amber-300">45:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-8">
+        <!-- Dashboard / Main Menu Screen -->
+        <div id="menu-screen" class="bg-white rounded-2xl shadow-sm p-6 border border-slate-200">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-2xl font-black text-slate-800">DANH SÁCH MÔN THI ÔN LUYỆN</h2>
+                <p class="text-sm text-slate-500 mt-2">Chọn môn học bên dưới để làm bài thi thử. Hệ thống chấm điểm tự động trên thang điểm 10.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- Card Tin Học -->
+                <div class="border-2 border-slate-100 hover:border-blue-500 rounded-2xl p-5 transition bg-gradient-to-br from-white to-blue-50/20 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">Tin Học 9</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-1">Đề cương Tin Học</h3>
+                        <p class="text-xs text-slate-500 mb-4">24 Trắc nghiệm, 8 Đúng/Sai, 4 Tự luận</p>
+                    </div>
+                    <button onclick="selectSubject('tin')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">THI TIN HỌC</button>
+                </div>
+
+                <!-- Card Địa Lý -->
+                <div class="border-2 border-slate-100 hover:border-emerald-500 rounded-2xl p-5 transition bg-gradient-to-br from-white to-emerald-50/20 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">Địa Lý 9</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-1">Đề cương Địa Lý</h3>
+                        <p class="text-xs text-slate-500 mb-4">12 Trắc nghiệm, 2 Đúng/Sai, 5 Tính toán & TL</p>
+                    </div>
+                    <button onclick="selectSubject('dia')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">THI ĐỊA LÝ</button>
+                </div>
+
+                <!-- Card Lịch Sử -->
+                <div class="border-2 border-slate-100 hover:border-rose-500 rounded-2xl p-5 transition bg-gradient-to-br from-white to-rose-50/20 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full">Lịch Sử 9</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-1">Đề cương Lịch Sử</h3>
+                        <p class="text-xs text-slate-500 mb-4">12 Trắc nghiệm, 4 Đúng/Sai, 4 Tự luận</p>
+                    </div>
+                    <button onclick="selectSubject('su')" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">THI LỊCH SỬ</button>
+                </div>
+
+                <!-- Card Toán Học -->
+                <div class="border-2 border-slate-100 hover:border-amber-500 rounded-2xl p-5 transition bg-gradient-to-br from-white to-amber-50/20 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">Toán Học 9</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-1">Đề cương Toán Học</h3>
+                        <p class="text-xs text-slate-500 mb-4">24 Câu Trắc nghiệm, 16 Bài Tự luận</p>
+                    </div>
+                    <button onclick="selectSubject('toan')" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">THI TOÁN HỌC</button>
+                </div>
+
+                <!-- Card Công Nghệ -->
+                <div class="border-2 border-slate-100 hover:border-purple-500 rounded-2xl p-5 transition bg-gradient-to-br from-white to-purple-50/20 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">Công Nghệ 9</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-1">Đề cương Công Nghệ</h3>
+                        <p class="text-xs text-slate-500 mb-4">17 Trắc nghiệm, 4 Đúng/Sai, 3 Tự luận</p>
+                    </div>
+                    <button onclick="selectSubject('cn')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">THI CÔNG NGHỆ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Screen -->
+        <form id="exam-form" class="hidden">
+            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <button type="button" onclick="goHome()" class="text-xs font-bold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+                    ← Chọn môn thi khác
+                </button>
+                <span id="exam-title-badge" class="font-bold text-sm text-indigo-700 uppercase"></span>
+            </div>
+
+            <!-- PART I -->
+            <section class="mb-8" id="sec-part1">
+                <div class="bg-indigo-600 text-white p-4 rounded-t-xl font-bold text-lg">PHẦN I. TRẮC NGHIỆM NHIỀU LỰA CHỌN</div>
+                <div id="part1-container" class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 space-y-6"></div>
+            </section>
+
+            <!-- PART II -->
+            <section class="mb-8" id="sec-part2">
+                <div class="bg-emerald-600 text-white p-4 rounded-t-xl font-bold text-lg">PHẦN II. TRẮC NGHIỆM ĐÚNG / SAI</div>
+                <div id="part2-container" class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 space-y-8"></div>
+            </section>
+
+            <!-- PART III -->
+            <section class="mb-8" id="sec-part3">
+                <div class="bg-amber-600 text-white p-4 rounded-t-xl font-bold text-lg">PHẦN III. TỰ LUẬN & GỢI Ý ĐÁP ÁN</div>
+                <div id="part3-container" class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 space-y-8"></div>
+            </section>
+
+            <div class="text-center py-6">
+                <button type="button" onclick="submitExam()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-lg px-12 py-4 rounded-xl shadow-xl transition">
+                    NỘP BÀI VÀ CHẤM ĐIỂM
+                </button>
+            </div>
+        </form>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden bg-white rounded-2xl shadow-xl p-8 border border-slate-200 mb-12">
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-2">KẾT QUẢ THI THỬ</h2>
+            <p id="result-subject-name" class="text-center text-slate-500 font-semibold mb-8"></p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-8">
+                <div class="text-center bg-indigo-50 border border-indigo-200 p-6 rounded-2xl">
+                    <span class="text-xs text-indigo-700 font-bold block uppercase tracking-wider">ĐIỂM TRẮC NGHIỆM (THANG 10)</span>
+                    <span id="final-score" class="text-4xl font-extrabold text-indigo-600 mt-2 block">10.0 / 10</span>
+                </div>
+                <div class="text-center bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                    <span class="text-xs text-slate-500 font-bold block uppercase tracking-wider">ĐÚNG PHẦN I</span>
+                    <span id="p1-correct" class="text-3xl font-bold text-slate-700 mt-2 block">0/0</span>
+                </div>
+                <div class="text-center bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                    <span class="text-xs text-slate-500 font-bold block uppercase tracking-wider">ĐÚNG PHẦN II</span>
+                    <span id="p2-correct" class="text-3xl font-bold text-slate-700 mt-2 block">0/0</span>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-slate-500 mb-8 max-w-xl mx-auto leading-relaxed">
+                * Điểm số phần trắc nghiệm được quy đổi tự động về thang điểm 10 khi bạn làm đúng toàn bộ. Phần tự luận đã mở gợi ý để rà soát.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button onclick="retryExam()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-3 rounded-xl shadow transition">🔄 THI LẠI</button>
+                <button onclick="goHome()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-800 text-white font-bold px-8 py-3 rounded-xl shadow transition">🏠 CHỌN MÔN KHÁC</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DỮ LIỆU ĐỀ CƯƠNG TIN HỌC 9
+        const tinData = {
+            title: "Tin Học 9 - Giữa Kì 1",
+            p1: [
+                { q: "Câu 1: Bộ xử lý thông tin trong máy tính có chức năng gì?", options: ["Lưu trữ dữ liệu.", "Xử lý và thực hiện các lệnh trên dữ liệu.", "Kết nối Internet.", "Hiển thị thông tin ra màn hình."], ans: 1 },
+                { q: "Câu 2: Thiết bị được gắn bộ xử lý thông tin để điều khiển giao thông đô thị trật tự:", options: ["Đèn giao thông.", "Xe ô tô tự lái.", "Camera an ninh.", "Biển báo."], ans: 0 },
+                { q: "Câu 3: CNTT tác động mạnh đến giáo dục nhờ:", options: ["Chuyển giao và tiếp cận thông tin dễ dàng.", "Động viên học tập.", "Hỗ trợ tính nhanh.", "Đánh giá công bằng."], ans: 0 },
+                { q: "Câu 4: Câu hỏi 'Thông tin được công bố khi nào?' kiểm tra tiêu chí:", options: ["Tính mới.", "Tính chính xác.", "Tính đầy đủ.", "Tính sử dụng được."], ans: 0 },
+                { q: "Câu 5: Vai trò quan trọng nhất của thông tin trong giải quyết vấn đề:", options: ["Tăng dữ liệu.", "Giảm tìm kiếm.", "Tăng truy cập.", "Làm cơ sở đưa ra quyết định đúng đắn."], ans: 3 },
+                { q: "Câu 6: Nguồn thông tin tin cậy về kì thi tuyển sinh lớp 10:", options: ["Mạng xã hội.", "Bộ TT&TT.", "Trang web Sở GD&ĐT.", "Bạn bè."], ans: 2 },
+                { q: "Câu 7: Tác động tiêu cực của công nghệ số đến quyền riêng tư:", options: ["Gây mất ngủ.", "Thông tin cá nhân rò rỉ và bị sử dụng bất hợp pháp.", "Gây nghiện.", "Ít giao tiếp."], ans: 1 },
+                { q: "Câu 8: Phương án KHÔNG phải tác động tiêu cực của công nghệ số:", options: ["Cung cấp công cụ giáo dục tiên tiến.", "Nhờ AI làm bài tập.", "Thiết bị nhanh lỗi thời.", "Tụt hậu."], ans: 0 },
+                { q: "Câu 9: Đâu là cách tránh tác động tiêu cực của công nghệ số?", options: ["Chia sẻ tin giả.", "Dùng phần mềm lậu.", "Tạo trang mạo danh.", "Sử dụng hiệu quả, không vi phạm pháp luật."], ans: 3 },
+                { q: "Câu 10: Phần mềm Crocodile Physics mô phỏng lĩnh vực nào?", options: ["Hóa học.", "Vật lý.", "Sinh học.", "Tin học."], ans: 1 },
+                { q: "Câu 11: Phần mềm trực tuyến mô phỏng thí nghiệm KHTN:", options: ["Flowgorithm.", "ChemLab.", "GeoGebra.", "PhET simulations."], ans: 3 },
+                { q: "Câu 12: Lợi ích lớn nhất của phần mềm mô phỏng:", options: ["Tạo nhiều tình huống nghiên cứu đầy đủ.", "Chi phí thấp.", "Không nguy hiểm.", "Thân thiện."], ans: 0 },
+                { q: "Câu 13: Robot lắp ráp trong nhà máy thuộc lĩnh vực nào?", options: ["Công nghiệp.", "Giao thông.", "Xây dựng.", "Giải trí."], ans: 0 },
+                { q: "Câu 14: Thiết bị nào KHÔNG gắn bộ xử lý thông tin?", options: ["Máy giặt.", "Máy rửa bát.", "Robot hút bụi.", "Máy khoan cầm tay."], ans: 3 },
+                { q: "Câu 15: Phương án KHÔNG phải tác động tích cực của CNTT lên giáo dục:", options: ["Cổ vũ thái độ sống tích cực.", "Mở rộng tiếp cận.", "Rút ngắn khoảng cách.", "Chia sẻ kiến thức."], ans: 0 },
+                { q: "Câu 16: Tính chính xác của thông tin thể hiện:", options: ["Lỗi thời chưa.", "Tính đúng đắn của thông tin.", "Tính phù hợp.", "Tính bao quát."], ans: 1 },
+                { q: "Câu 17: Vai trò của chất lượng thông tin trong giải quyết vấn đề:", options: ["Tăng dữ liệu.", "Giảm tìm kiếm.", "Tăng truy cập.", "Cơ sở đưa ra quyết định đúng đắn."], ans: 3 },
+                { q: "Câu 18: Đánh giá nhân viên vắng mặt 1 ngày vi phạm yếu tố nào?", options: ["Tính mới.", "Tính chính xác.", "Tính đầy đủ.", "Tính sử dụng được."], ans: 2 },
+                { q: "Câu 19: Tác động tiêu cực của công nghệ số đến môi trường:", options: ["Thất nghiệp.", "Tổn hại thị lực.", "Tiết kiệm thời gian.", "Tạo rác thải điện tử."], ans: 3 },
+                { q: "Câu 20: Tác động tiêu cực của công nghệ số đến thể chất:", options: ["Gây khô mắt và giảm thị lực.", "Ảnh hưởng quan hệ.", "Cảm xúc tiêu cực.", "Cổ xúy lối sống xấu."], ans: 0 },
+                { q: "Câu 21: Đăng địa chỉ nhà người khác lên mạng xã hội là hành vi:", options: ["Vi phạm sở hữu trí tuệ.", "Vi phạm uy tín.", "Vi phạm an ninh quốc gia.", "Vi phạm bảo đảm an toàn thông tin mạng."], ans: 3 },
+                { q: "Câu 22: Phần mềm mô phỏng pha màu trực tuyến:", options: ["mixcolors.com", "trycolors.com", "simulatecolors.com", "colors.com"], ans: 1 },
+                { q: "Câu 23: Phần mềm mô phỏng giúp vẽ hình và giải toán:", options: ["GeoGebra.", "Crocodile Physics.", "Flowgorithm.", "ChemLab."], ans: 0 },
+                { q: "Câu 24: Trang web physics.weber.edu/schroeder/md giúp:", options: ["Chạy sơ đồ khối.", "Mô phỏng vật lý.", "Giải quyết giao thông.", "Nghiên cứu chuyển động và tương tác phân tử."], ans: 3 }
+            ],
+            p2: [
+                { title: "Câu 1: Nhận định về ứng dụng máy tính trong y tế:", items: [{ text: "a) Phân tích X-quang phát hiện bệnh sớm.", ans: true }, { text: "b) Robot phẫu thuật hỗ trợ chính xác hơn.", ans: true }, { text: "c) Ứng dụng điện thoại tự chẩn đoán bệnh chính xác tại nhà.", ans: false }, { text: "d) Dữ liệu y tế lưu trữ máy tính tuyệt đối an toàn.", ans: false }] },
+                { title: "Câu 2: Nhận định về chất lượng thông tin:", items: [{ text: "a) Thông tin càng chính xác kết quả càng tin cậy.", ans: true }, { text: "b) Thông tin chỉ cần nhiều không cần đúng.", ans: false }, { text: "c) Thông tin sai lệch dẫn đến kết quả sai.", ans: true }, { text: "d) Chọn bất kỳ thông tin nào trên mạng cũng đúng.", ans: false }] },
+                { title: "Câu 3: Nhận định về hành vi trong môi trường số:", items: [{ text: "a) Tải nhạc, phim, phần mềm lậu.", ans: true }, { text: "b) Đăng tải thông tin sai sự thật.", ans: true }, { text: "c) Bình luận xúc phạm người khác.", ans: true }, { text: "d) Chia sẻ hình ảnh cá nhân bạn bè chưa xin phép.", ans: true }] },
+                { title: "Câu 4: Lợi ích phần mềm mô phỏng:", items: [{ text: "a) Quan sát hiện tượng khó thấy trong thực tế.", ans: true }, { text: "b) Luôn thay thế hoàn toàn thí nghiệm thực tế.", ans: false }, { text: "c) Giảm khả năng hiểu bài.", ans: false }, { text: "d) Luyện tập nhiều lần rút kinh nghiệm.", ans: true }] },
+                { title: "Câu 5: Khả năng lưu trữ dữ liệu của máy tính:", items: [{ text: "a) Lưu trữ dữ liệu không cấu trúc như ảnh, âm thanh.", ans: true }, { text: "b) Dung lượng lưu trữ không giới hạn.", ans: false }, { text: "c) Thiết bị lưu trữ có tuổi thọ không giới hạn.", ans: false }, { text: "d) Virus có thể làm hỏng dữ liệu lưu trữ.", ans: true }] },
+                { title: "Câu 6: Biểu hiện thông tin mang tính chính xác:", items: [{ text: "a) Dựa trên kinh nghiệm cá nhân chủ quan.", ans: false }, { text: "b) Được cập nhật thường xuyên.", ans: true }, { text: "c) Phù hợp với những gì đã biết về vấn đề.", ans: true }, { text: "d) Dùng từ mang tính tuyệt đối như 'luôn luôn'.", ans: false }] },
+                { title: "Câu 7: Hành vi khi sử dụng mạng xã hội:", items: [{ text: "a) Tranh luận sôi nổi thẳng thắn.", ans: true }, { text: "b) Kết bạn chia sẻ khoảnh khắc vui vẻ.", ans: true }, { text: "c) Tạo nội dung sáng tạo kết nối cộng đồng.", ans: true }, { text: "d) Phơi bày địa chỉ nhà, lịch trình nhạy cảm lên mạng.", ans: true }] },
+                { title: "Câu 8: Nhận định về lợi ích phần mềm mô phỏng:", items: [{ text: "a) Phát hiện lỗi thiết kế trước sản xuất.", ans: true }, { text: "b) Tương tác mô hình 3D hiểu rõ hệ thống.", ans: true }, { text: "c) Thay thế hoàn toàn thử nghiệm thực tế.", ans: false }, { text: "d) Tạo ra sản phẩm thực không cần sản xuất truyền thống.", ans: false }] }
+            ],
+            p3: [
+                { q: "Câu 1: Nguồn thông tin cần tham khảo trước khi chọn môn THPT?", hint: "Gợi ý: Năng lực bản thân, ý kiến cha mẹ/thầy cô, thông tin nhà trường, nhu cầu xã hội. Mở rộng thông tin giúp đối chiếu kiểm chứng, đảm bảo đầy đủ." },
+                { q: "Câu 2: Bạn Nam làm bài lúc nào cũng dùng ChatGPT có vi phạm pháp luật không?", hint: "Gợi ý: Không vi phạm pháp luật, nhưng phụ thuộc AI làm giảm tư duy tự học. Nên dùng làm công cụ tham khảo." },
+                { q: "Câu 3: Đưa ra câu hỏi bao quát trước khi chọn môn học THPT?", hint: "Gợi ý: Có bao nhiêu môn? Môn thế mạnh là gì? Ngành nghề tương lai cần môn gì? Có thay đổi môn được không?" },
+                { q: "Câu 4: Bạn Chiến khoe làm bài tập bằng ChatGPT rất nhanh, quan điểm em thế nào?", hint: "Gợi ý: Không vi phạm pháp luật nhưng lạm dụng sẽ rỗng kiến thức. Chỉ nên coi ChatGPT là công cụ hỗ trợ." }
+            ]
+        };
+
+        // DỮ LIỆU ĐỀ CƯƠNG ĐỊA LÝ 9
+        const diaData = {
+            title: "Địa Lý 9 - Giữa Kì 1",
+            p1: [
+                { q: "Câu 1: Số dân nước ta tính đến năm 2024 là:", options: ["101,1 triệu người.", "101,2 triệu người.", "101,3 triệu người.", "101,4 triệu người."], ans: 2 },
+                { q: "Câu 2: Tỉ lệ lao động đã qua đào tạo lớn nhất nước thuộc vùng nào?", options: ["Đông Nam Bộ.", "Duyên hải Nam Trung Bộ.", "Đồng bằng sông Hồng.", "Đồng bằng sông Cửu Long."], ans: 2 },
+                { q: "Câu 3: Đặc điểm cơ cấu dân số theo nhóm tuổi năm 2024 ở nước ta:", options: ["Dưới 15 tuổi giảm, 65 tuổi trở lên tăng.", "Dưới 15 tuổi tăng, 65 tuổi trở lên giảm.", "Cả hai nhóm đều tăng.", "Cả hai nhóm đều giảm."], ans: 0 },
+                { q: "Câu 4: Hai vùng sản xuất lúa trọng điểm lớn nhất nước ta:", options: ["ĐBSCL và Tây Nguyên.", "ĐBSH và Trung du miền núi phía Bắc.", "ĐBSH và ĐBSCL.", "ĐBSCL và Đông Nam Bộ."], ans: 2 },
+                { q: "Câu 5: Ngành chăn nuôi lợn nước ta chuyển dịch theo hình thức:", options: ["Từ trang trại sang hộ gia đình.", "Thả rông tự nhiên.", "Chỉ tập trung ở ĐBSH.", "Từ quy mô nhỏ sang mô hình trang trại tập trung."], ans: 3 },
+                { q: "Câu 6: Trồng trọt chiếm tỉ trọng bao nhiêu % trong giá trị sản xuất nông nghiệp (2024)?", options: ["30,6%.", "74,4%.", "65,3%.", "17,9%."], ans: 2 },
+                { q: "Câu 7: Mật độ dân số trung bình nước ta năm 2024:", options: ["136 người/km².", "306 người/km².", "385 người/km².", "1034 người/km²."], ans: 1 },
+                { q: "Câu 8: Tỉ lệ dân cư nông thôn nước ta năm 2024 chiếm khoảng:", options: ["38,5%.", "19,5%.", "61,5%.", "50,0%."], ans: 2 },
+                { q: "Câu 9: Ngành chăn nuôi lợn chuyển dịch nhằm mục đích chính:", options: ["Tăng quy mô nhỏ lẻ.", "Chuyển sang trang trại tập trung an toàn sinh học.", "Giảm sản lượng.", "Nuôi thả tự do."], ans: 1 },
+                { q: "Câu 10: Dân số nước ta năm 2024 đạt khoảng:", options: ["86,0 triệu.", "96,5 triệu.", "101,3 triệu.", "103,0 triệu."], ans: 2 },
+                { q: "Câu 11: Tư liệu sản xuất KHÔNG THỂ THAY THẾ của nông nghiệp:", options: ["Khí hậu.", "Nước.", "Đất đai.", "Sinh vật."], ans: 2 },
+                { q: "Câu 12: Tỉ số giới tính 99,6 nam / 100 nữ năm 2024 có nghĩa:", options: ["Cứ 100 nam có 99,6 nữ.", "Cứ 100 nữ có khoảng 99,6 nam.", "Nam nhiều hơn nữ.", "Nam nữ bằng nhau."], ans: 1 }
+            ],
+            p2: [
+                { title: "Câu 13: Cơ cấu lao động theo thành phần kinh tế 2010-2024:", items: [{ text: "a) Kinh tế ngoài Nhà nước luôn chiếm tỉ trọng lao động cao nhất.", ans: true }, { text: "b) Tỉ trọng lao động có vốn đầu tư nước ngoài và Nhà nước đều giảm.", ans: false }, { text: "c) Chuyển dịch phản ánh kết quả công nghiệp hóa hội nhập.", ans: true }, { text: "d) Biểu đồ thích hợp nhất là biểu đồ miền.", ans: true }] },
+                { title: "Câu 14: Dân số và tỉ lệ tăng dân số 1999-2024:", items: [{ text: "a) Dân số tăng liên tục 24,8 triệu người.", ans: true }, { text: "b) Tỉ lệ tăng giảm nhưng dân số vẫn tăng nhanh do quy mô dân số đông.", ans: true }, { text: "c) Tỉ lệ gia tăng dân số tăng 0,48%.", ans: false }, { text: "d) Biểu đồ thích hợp nhất thể hiện số dân và tỉ lệ tăng là biểu đồ kết hợp.", ans: true }] }
+            ],
+            p3: [
+                { q: "Câu 15 (Tính toán): Sản lượng lương thực 47,9 triệu tấn, lúa đạt 43,5 triệu tấn. Tính % lúa?", hint: "Đáp án: (43,5 / 47,9) * 100 = 90.8%" },
+                { q: "Câu 16 (Tính toán): Tổng lao động 51,9 triệu người, dịch vụ chiếm 40,2%. Số lao động dịch vụ?", hint: "Đáp án: 51,9 * 40,2% = 20.9 triệu người." },
+                { q: "Câu 17 (Tính toán): Thủy sản 9,7 triệu tấn, khai thác chiếm 40,2%. Sản lượng khai thác?", hint: "Đáp án: 9,7 * 40,2% = 3.9 triệu tấn." },
+                { q: "Câu 18 (Tính toán): Tổng diện tích rừng 14,9 triệu ha, TDMN phía Bắc chiếm 36,0%. Tính diện tích?", hint: "Đáp án: 14,9 * 36,0% = 5.4 triệu ha." },
+                { q: "Câu 19: Khai thác lâm sản & Giải pháp cây cà phê xã Nà Tấu (Điện Biên)?", hint: "Gợi ý: Áp dụng kỹ thuật canh tác bền vững, liên kết bao tiêu sản phẩm, chế biến sâu, bảo vệ nguồn nước." }
+            ]
+        };
+
+        // DỮ LIỆU ĐỀ CƯƠNG LỊCH SỬ 9
+        const suData = {
+            title: "Lịch Sử 9 - Giữa Kì 1",
+            p1: [
+                { q: "Câu 1: Từ năm 1920, phong trào bãi công của công nhân Pháp đặt dưới sự lãnh đạo của:", options: ["Đảng Xã hội Pháp.", "Quốc tế Cộng sản.", "Mặt trận Nhân dân.", "Đảng Cộng sản Pháp."], ans: 3 },
+                { q: "Câu 2: Cuộc khủng hoảng kinh tế thế giới 1929 - 1933 diễn ra đầu tiên ở:", options: ["Anh.", "Pháp.", "Đức.", "Mỹ."], ans: 3 },
+                { q: "Câu 3: Từ năm 1922, lãnh đạo phong trào công nhân Nhật Bản là:", options: ["Đảng Dân chủ.", "Đảng Quốc đại.", "Quốc dân Đảng.", "Đảng Cộng sản."], ans: 3 },
+                { q: "Câu 4: Năm 1945, các quốc gia Đông Nam Á giành độc lập là:", options: ["Việt Nam, Lào, Campuchia.", "Thái Lan, Lào, Brunây.", "Việt Nam, Inđônêxia, Lào.", "Inđônêxia, Mã Lai, Philippin."], ans: 2 },
+                { q: "Câu 5: Sự kiện đánh dấu bước ngoặt Chiến tranh thế giới thứ hai chuyển sang phản công:", options: ["Trận Béc-lin.", "Trận Xta-lin-grát (2-1943).", "Trận Trân Châu Cảng.", "Trận Noóc-măng-đi."], ans: 1 },
+                { q: "Câu 6: Tổ chức được coi là tiền thân của Đảng Cộng sản Việt Nam:", options: ["Hội Việt Nam Cách mạng Thanh niên.", "Đông Dương Cộng sản đảng.", "An Nam Cộng sản đảng.", "Việt Nam Quốc dân đảng."], ans: 0 },
+                { q: "Câu 7: Đại hội VII (1935) của Quốc tế Cộng sản xác định kẻ thù trước mắt là:", options: ["Chủ nghĩa phát xít.", "Chủ nghĩa thực dân.", "Chủ nghĩa đế quốc.", "Chủ nghĩa tư bản."], ans: 0 },
+                { q: "Câu 8: Trong những năm 20 của thế kỉ XX, chính đảng nắm quyền ở Mỹ là:", options: ["Đảng Tự do.", "Đảng Dân chủ.", "Đảng Bảo thủ.", "Đảng Cộng hòa."], ans: 3 },
+                { q: "Câu 9: Trong Chiến tranh thế giới thứ hai, các nước Đông Nam Á trở thành thuộc địa của:", options: ["Phát xít Đức.", "Phát xít Nhật.", "Đế quốc Mỹ.", "Phát xít Italia."], ans: 1 },
+                { q: "Câu 10: Mông Cổ xây dựng đất nước (1924-1939) nhận sự giúp đỡ chủ yếu từ:", options: ["Triều Tiên.", "Trung Quốc.", "Việt Nam.", "Liên Xô."], ans: 3 },
+                { q: "Câu 11: Quốc gia trụ cột của Mặt trận Đồng minh chống phát xít (1942):", options: ["Đức.", "Tây Ban Nha.", "Nhật Bản.", "Anh."], ans: 3 },
+                { q: "Câu 12: Trong giai đoạn 1919-1925, giai cấp tư sản Việt Nam KHÔNG lập tờ báo nào?", options: ["Thực nghiệp dân báo.", "An Nam trẻ.", "Tiếng vang An Nam.", "Diễn đàn bản xứ."], ans: 1 }
+            ],
+            p2: [
+                { title: "Câu 1: Nhận định về khủng hoảng kinh tế 1929–1933:", items: [{ text: "a) Khủng hoảng khiến hàng chục triệu người thất nghiệp.", ans: true }, { text: "b) Khủng hoảng chỉ ảnh hưởng châu Âu không lan sang Mỹ.", ans: false }, { text: "c) Phong trào cách mạng chuyển từ thoái trào sang cao trào.", ans: true }, { text: "d) Hàng chục triệu công nhân tham gia bãi công.", ans: true }] },
+                { title: "Câu 2: Nhận định về sự thành lập Đảng Cộng sản Việt Nam:", items: [{ text: "a) Đảng thành lập đầu năm 1930.", ans: true }, { text: "b) Ra đời là sự kết hợp Mác-Lênin với phong trào công nhân và yêu nước.", ans: true }, { text: "c) Chấm dứt hoàn toàn ách thống trị của Pháp ngay khi thành lập.", ans: false }, { text: "d) Chấm dứt thời kỳ khủng hoảng về đường lối và giai cấp lãnh đạo.", ans: true }] },
+                { title: "Câu 3: Chính sách Cộng sản thời chiến ở Nga Xô Viết:", items: [{ text: "a) Phản ánh nội dung lĩnh vực nông nghiệp.", ans: true }, { text: "b) Thực hiện trưng thu lương thực thừa linh hoạt.", ans: true }, { text: "c) Nông dân tự do bán lương thực sau khi đóng thuế.", ans: false }, { text: "d) Cả chính sách thời chiến và NEPS đều trưng thu lương thực thừa.", ans: false }] },
+                { title: "Câu 4: Cuộc bãi công Ba Son (1925):", items: [{ text: "a) Công nhân Ba Son bãi công do Tôn Đức Thắng lãnh đạo.", ans: true }, { text: "b) Mở đầu giai đoạn đấu tranh có tổ chức.", ans: true }, { text: "c) Đánh dấu bước chuyển từ 'tự phát' sang 'tự giác'.", ans: true }, { text: "d) Lần đầu tiên bãi công được sử dụng ở Việt Nam.", ans: false }] }
+            ],
+            p3: [
+                { q: "Câu 1: Ý nghĩa lịch sử phong trào yêu nước theo khuynh hướng dân chủ tư sản?", hint: "Gợi ý: Cổ vũ tinh thần yêu nước; đào tạo cán bộ; khảo nghiệm con đường tư sản thất bại; hướng đến khuynh hướng vô sản." },
+                { q: "Câu 2: Bài học từ Chiến tranh thế giới thứ hai cho việc bảo vệ hòa bình hiện nay?", hint: "Gợi ý: Thương lượng hòa bình; duy trì vai trò LHQ; đoàn kết chống sử dụng vũ lực; dung hòa lợi ích quốc gia." },
+                { q: "Câu 3: Phân tích tình hình phát triển kinh tế Mỹ giữa hai cuộc chiến tranh?", hint: "Gợi ý: Thập niên 20 phát triển hoàng kim; 1929 đại suy thoái; Tổng thống Roosevelt thực hiện Chính sách mới cứu nguy TBCN." },
+                { q: "Câu 4: Vai trò Liên Xô và các nước Đồng minh trong tiêu diệt phát xít?", hint: "Gợi ý: Liên Xô, Mỹ, Anh là trụ cột tiêu diệt phát xít, trong đó Liên Xô giữ vai trò quyết định nhất." }
+            ]
+        };
+
+        // DỮ LIỆU ĐỀ CƯƠNG TOÁN HỌC 9
+        const toanData = {
+            title: "Toán Học 9 - Giữa Kì 1",
+            p1: [
+                { q: "Câu 1: Tam giác ABC vuông tại A. Khẳng định đúng:", options: ["sin B = AC/BC", "cos B = AB/BC", "tan B = AC/AB", "Tất cả đều đúng"], ans: 3 },
+                { q: "Câu 2: Phương trình nào là phương trình tích?", options: ["(x-1)(x+2) = 0", "2x + 1 = 0", "x/2 = 3", "x + y = 5"], ans: 0 },
+                { q: "Câu 3: Tam giác ABC vuông tại A có AB=3, AC=4, BC=5. Tỉ số sin B là:", options: ["3/5", "4/5", "3/4", "4/3"], ans: 1 },
+                { q: "Câu 4: Cặp số nào là nghiệm của x + 2y = 5?", options: ["(1; -2)", "(1; 2)", "(3; -1)", "(-1; -2)"], ans: 1 },
+                { q: "Câu 5: 'x lớn hơn hoặc bằng 3' ký hiệu là:", options: ["x > 3", "x ≥ 3", "x < 3", "x ≤ 3"], ans: 1 },
+                { q: "Câu 6: Phương trình chứa ẩn ở mẫu là:", options: ["x/2 = 1", "2/(x-1) = 3", "x^2 + 1 = 0", "2x + y = 3"], ans: 1 },
+                { q: "Câu 7: Phương trình KHÔNG phải bậc nhất hai ẩn:", options: ["2x + y = 3", "0x + 2y = 1", "x - 0y = 4", "0x + 0y = 5"], ans: 3 },
+                { q: "Câu 8: ĐKXĐ của phương trình (x+1)/(x-2) = 0:", options: ["x ≠ 2", "x ≠ -1", "x ≠ 0", "x ≠ 1"], ans: 0 },
+                { q: "Câu 9: Tính sqrt(16):", options: ["2", "4", "8", "16"], ans: 1 },
+                { q: "Câu 10: Bất phương trình bậc nhất một ẩn:", options: ["2x + 3 > 0", "0x + 1 < 0", "x^2 + 1 > 0", "1/x > 2"], ans: 0 },
+                { q: "Câu 11: x = 2 là nghiệm của bất phương trình nào?", options: ["x + 1 < 0", "2x - 1 > 0", "x + 5 < 3", "x > 10"], ans: 1 },
+                { q: "Câu 12: Tam giác ABC vuông tại A, AB=6, AC=8. Cạnh BC bằng:", options: ["10cm", "12cm", "14cm", "100cm"], ans: 0 },
+                { q: "Câu 13: Nghiệm của bất phương trình 2x - 4 > 0:", options: ["x > 2", "x < 2", "x > -2", "x < -2"], ans: 0 },
+                { q: "Câu 14: ĐKXĐ của 1/(x+3):", options: ["x ≠ -3", "x ≠ 3", "x ≠ 0", "x > -3"], ans: 0 },
+                { q: "Câu 15: Bất phương trình bậc nhất 1 ẩn:", options: ["3x - 5 ≤ 0", "x^2 > 1", "0x - 2 < 0", "y + x > 0"], ans: 0 },
+                { q: "Câu 16: Vế phải của bất đẳng thức A ≤ B là:", options: ["A", "B", "A ≤ B", "0"], ans: 1 },
+                { q: "Câu 17: Số nghiệm của phương trình 0x = 0:", options: ["1 nghiệm", "2 nghiệm", "Vô số nghiệm", "Vô nghiệm"], ans: 2 },
+                { q: "Câu 18: Phương trình tích:", options: ["(x+3)(2x-1) = 0", "x + 3 = 2", "x/2 = 0", "x + y = 0"], ans: 0 },
+                { q: "Câu 19: Phương trình bậc nhất hai ẩn:", options: ["3x - y = 2", "x^2 + y = 1", "x + y^2 = 3", "1/x + y = 2"], ans: 0 },
+                { q: "Câu 20: Tam giác vuông cạnh huyền a, cạnh góc vuông b, c. Hệ thức đúng:", options: ["a^2 = b^2 + c^2", "b^2 = a^2 + c^2", "a = b + c", "c^2 = a^2 + b^2"], ans: 0 },
+                { q: "Câu 21: Phương trình KHÔNG chứa ẩn ở mẫu:", options: ["x/3 + 1 = 2", "1/x = 2", "2/(x-1) = 0", "x/(x+1) = 3"], ans: 0 },
+                { q: "Câu 22: Tam giác ABC vuông tại A. Phát biểu SAI:", options: ["sin B = cos C", "cos B = sin C", "tan B = cot C", "sin B = tan B"], ans: 3 },
+                { q: "Câu 23: Tam giác ABC vuông tại A. Phát biểu SAI:", options: ["sin^2 B + cos^2 B = 1", "tan B = sin B / cos B", "tan B . cot B = 1", "sin B + cos B = 1"], ans: 3 },
+                { q: "Câu 24: Cho cot α = 0,75. Tính tan α:", options: ["4/3 (xấp xỉ 1,33)", "0,75", "0,6", "0,8"], ans: 0 }
+            ],
+            p2: [],
+            p3: [
+                { q: "Bài 1: Giải phương trình a) 2x - 3 = 5; b) (x-1)(x+3) = 0", hint: "a) x = 4; b) x = 1 hoặc x = -3." },
+                { q: "Bài 2: Máy bay bay với vận tốc 500km/h góc 30 độ. Tính độ cao AC sau 1,2 phút?", hint: "Quãng đường BC = 500 * (1.2/60) = 10km. Độ cao AC = 10 * sin(30°) = 5km." },
+                { q: "Bài 3: Thửa ruộng hình chữ nhật tăng/giảm kích thước tính diện tích.", hint: "Lập hệ phương trình bậc nhất 2 ẩn x, y chiều dài chiều rộng." },
+                { q: "Bài 4: Hai tổ sản xuất cùng làm sản phẩm...", hint: "Lập hệ phương trình tính sản phẩm mỗi tổ trong 1 ngày." },
+                { q: "Bài 5: Giải bất phương trình 3x - 6 > 0", hint: "x > 2." },
+                { q: "Bài 7: Tam giác ABC vuông tại A, AB=6cm, AC=8cm. Tính góc B, AH?", hint: "BC = 10cm. AH = (6*8)/10 = 4.8cm. tan B = 8/6 => góc B ≈ 53°." },
+                { q: "Bài 13: Thang dài 6m dựa tường góc 60 độ. Chân thang cách tường bao nhiêu?", hint: "Khoảng cách = 6 * cos(60°) = 3m." },
+                { q: "Bài 14: Cột đèn cao 7m bóng dài 4m. Tính góc α?", hint: "tan α = 7/4 = 1.75 => α ≈ 60°." }
+            ]
+        };
+
+        // DỮ LIỆU ĐỀ CƯƠNG CÔNG NGHỆ 9
+        const cnData = {
+            title: "Công Nghệ 9 - Giữa Kì 1",
+            p1: [
+                { q: "Câu 1: Nội dung KHÔNG đúng khi nói về nghề nghiệp:", options: ["Tạo ra sản phẩm mang lại thu nhập.", "Có tính ổn định gắn bó lâu dài.", "Gồm tất cả các công việc năng động biến đổi.", "Tập hợp các công việc xã hội công nhận."], ans: 2 },
+                { q: "Câu 2: Lựa chọn đúng nghề nghiệp có ý nghĩa gì với gia đình?", options: ["Nền tảng thành công hạnh phúc gia đình.", "Tránh tệ nạn.", "Giảm mất an toàn.", "Gánh vác chi phí."], ans: 0 },
+                { q: "Câu 3: Tầm quan trọng của nghề nghiệp đối với xã hội:", options: ["Tạo niềm vui.", "Góp phần giảm tệ nạn, đảm bảo kỷ cương ổn định xã hội.", "Phát triển nhân cách.", "Thu nhập ổn định."], ans: 1 },
+                { q: "Câu 4: Yêu cầu về phẩm chất ngành kỹ thuật công nghệ:", options: ["Hiểu nguyên lý cơ bản, sử dụng thiết bị đúng cách hiệu quả.", "Đủ sức khỏe.", "Ý thức rèn luyện.", "Làm việc nhóm."], ans: 0 },
+                { q: "Câu 5: Vấn đề cơ bản của thị trường lao động hiện nay:", options: ["Chất lượng lao động còn thấp, phân bổ không đều.", "Tuyển lao động chưa đào tạo.", "Chất lượng chuyên môn rất cao.", "Cầu cao hơn cung."], ans: 0 },
+                { q: "Câu 6: Nội dung KHÔNG đúng về vai trò thị trường lao động:", options: ["Phát triển KT-XH.", "Định hướng nghề nghiệp.", "Cung cấp thông tin tuyển dụng.", "Người lao động tự quyết định không cần thị trường."], ans: 3 },
+                { q: "Câu 7: Sự phát triển KH-CN tác động thế nào đến thị trường lao động?", options: ["Tác động phát triển xã hội.", "Tác động phát triển địa phương.", "Tác động các vùng.", "Tác động đến các ngành nghề và các nhóm người lao động."], ans: 3 },
+                { q: "Câu 8: Nguồn thông tin cậy về thị trường lao động Việt Nam:", options: ["Cổng Dịch vụ công Quốc gia.", "Bộ Công an.", "Cổng thông tin điện tử Quốc gia.", "Cổng thông tin điện tử Bộ Lao động - Thương binh và Xã hội."], ans: 3 },
+                { q: "Câu 9: Gia đình ảnh hưởng đến chọn nghề học sinh ở điểm nào?", options: ["Quyết định hoàn toàn.", "Gợi ý định hướng phù hợp khả năng điều kiện.", "Không liên quan.", "Chỉ tác động học phí."], ans: 1 },
+                { q: "Câu 10: Công cụ giúp đánh giá cá tính bản thân chọn nghề:", options: ["Phiếu điểm.", "Thời gian biểu.", "Trắc nghiệm tính cách Holland.", "Kiểm tra thể dục."], ans: 2 },
+                { q: "Câu 11: Ngành kỹ thuật công nghệ đòi hỏi yếu tố gì?", options: ["Năng khiếu nghệ thuật.", "Tư duy logic, khả năng sử dụng công nghệ.", "Cảm xúc cao.", "Giao tiếp công chúng."], ans: 1 },
+                { q: "Câu 12: Tại sao cần đánh giá bản thân qua trắc nghiệm, tham khảo ý kiến?", options: ["Tìm hiểu sâu về nghề.", "Hiểu thu nhập.", "Hiểu rõ năng lực, sở thích, tính cách phù hợp với ngành nghề.", "Biết vị trí việc làm."], ans: 2 },
+                { q: "Câu 13: Điểm giống nhau của nghề nghiệp và việc làm:", options: ["Sử dụng kỹ năng kiến thức tạo sản phẩm đáp ứng nhu cầu xã hội.", "Công việc nhất thời.", "Đào tạo chuyên biệt.", "Trả công."], ans: 0 },
+                { q: "Câu 14: Ý nghĩa sự chuyển dịch cơ cấu đối với lao động:", options: ["Thay đổi nhu cầu lao động kéo theo chuyển dịch cơ cấu lao động tương ứng.", "Thay đổi cơ cấu vùng.", "Thay đổi địa phương.", "Không ảnh hưởng."], ans: 0 },
+                { q: "Câu 15: Mất cân đối cung cầu lao động do nguyên nhân:", options: ["Cung tăng nhanh nhưng chất lượng còn thấp.", "Cung tăng chậm.", "Chất lượng quá cao.", "Cung ổn định."], ans: 0 },
+                { q: "Câu 16: Yếu tố KHÔNG nên xem là năng lực học tập:", options: ["Khả năng hát biểu diễn nghệ thuật.", "Tư duy logic.", "Làm việc nhóm.", "Vẽ kỹ thuật."], ans: 0 },
+                { q: "Câu 17: Nghề đòi hỏi lập trình và tư duy logic cao:", options: ["Thiết kế thời trang.", "Bác sĩ.", "Kỹ sư xây dựng.", "Lập trình viên phần mềm."], ans: 3 }
+            ],
+            p2: [
+                { title: "Câu 18: Nhận định về các ngành nghề kỹ thuật:", items: [{ text: "a) Công nhân lắp ráp ô tô thuộc nhóm kỹ thuật - công nghệ.", ans: true }, { text: "b) Kỹ sư thiết kế khung xe không phải nghề kỹ thuật.", ans: false }, { text: "c) Nhân viên kiểm định chất lượng thuộc lĩnh vực kỹ thuật.", ans: true }, { text: "d) Nghề kỹ thuật không cần kỹ năng làm việc nhóm.", ans: false }] },
+                { title: "Câu 19: Nhận định về hệ thống giáo dục học nghề:", items: [{ text: "a) Giáo dục nghề nghiệp gồm trung cấp và cao đẳng.", ans: true }, { text: "b) Hệ thống giáo dục gồm mầm non, phổ thông, nghề nghiệp/đại học.", ans: true }, { text: "c) Mầm non và phổ thông là bắt buộc.", ans: false }, { text: "d) Chọn con đường học nghề giúp tiết kiệm thời gian phát huy sở trường.", ans: true }] },
+                { title: "Câu 20: Nhận định thị trường lao động kỹ thuật:", items: [{ text: "a) Khoa học công nghệ ảnh hưởng lớn đến thị trường lao động.", ans: true }, { text: "b) Lao động công nghệ cần trình độ chuyên môn cao.", ans: true }, { text: "c) Thị trường lao động kỹ thuật bão hòa ít cơ hội.", ans: false }, { text: "d) Học sinh cần chủ động rèn luyện kỹ năng.", ans: true }] },
+                { title: "Câu 21: Nhận định về yếu tố lựa chọn nghề nghiệp:", items: [{ text: "a) Năng lực sở thích điều kiện ảnh hưởng chọn nghề.", ans: true }, { text: "b) Nghề nghiệp không cần phù hợp tính cách.", ans: false }, { text: "c) Chỉ cần quan tâm xu hướng xã hội là đủ.", ans: false }, { text: "d) Xem xét cả cơ hội học tập và việc làm sau này.", ans: true }] }
+            ],
+            p3: [
+                { q: "Câu 22: Hệ thống giáo dục quốc dân & phân luồng sau THCS?", hint: "Gợi ý: Giáo dục mầm non, phổ thông, nghề nghiệp, đại học. Phân luồng giúp định hướng sớm, tiết kiệm nguồn lực xã hội." },
+                { q: "Câu 23: Tình huống tư vấn định hướng nghề nghiệp (Thương, N&K)?", hint: "Gợi ý: Cần dung hòa giữa sở thích/năng lực bản thân và định hướng gia đình/thu nhập. Chọn nghề phải có đam mê mới bền vững." },
+                { q: "Câu 24: Lựa chọn 1 nghề kỹ thuật em yêu thích và phân tích các yếu tố ảnh hưởng?", hint: "Gợi ý: Ví dụ Lập trình viên/Kỹ sư ô tô. Phân tích tư duy logic, sở thích máy móc, bối cảnh gia đình." }
+            ]
+        };
+
+        let currentData = null, timerInterval = null, timeLeft = 45 * 60;
+
+        function selectSubject(key) {
+            if(key==='tin') currentData = tinData;
+            else if(key==='dia') currentData = diaData;
+            else if(key==='su') currentData = suData;
+            else if(key==='toan') currentData = toanData;
+            else if(key==='cn') currentData = cnData;
+
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('exam-form').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('timer-box').classList.remove('hidden');
+            document.getElementById('current-subject-label').innerText = currentData.title;
+            document.getElementById('exam-title-badge').innerText = currentData.title;
+
+            renderExam();
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            clearInterval(timerInterval);
+            document.getElementById('menu-screen').classList.remove('hidden');
+            document.getElementById('exam-form').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('timer-box').classList.add('hidden');
+            document.getElementById('current-subject-label').innerText = "Chọn môn thi để bắt đầu";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 45 * 60;
+            updateTimer();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) { clearInterval(timerInterval); alert("Hết thời gian làm bài!"); submitExam(); }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+            document.getElementById('timer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function renderExam() {
+            // Part 1
+            const p1Box = document.getElementById('part1-container');
+            if(!currentData.p1 || currentData.p1.length === 0) {
+                document.getElementById('sec-part1').classList.add('hidden');
+            } else {
+                document.getElementById('sec-part1').classList.remove('hidden');
+                p1Box.innerHTML = currentData.p1.map((item, qI) => `
+                    <div class="border-b border-slate-100 pb-4 last:border-0">
+                        <p class="font-semibold text-slate-800 mb-3 text-sm sm:text-base">${item.q}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            ${item.options.map((opt, oI) => `
+                                <div>
+                                    <input type="radio" id="p1_${qI}_${oI}" name="p1_${qI}" value="${oI}" class="hidden custom-radio">
+                                    <label for="p1_${qI}_${oI}" class="block p-3 border border-slate-200 rounded-xl text-xs sm:text-sm cursor-pointer hover:bg-slate-50 transition">${String.fromCharCode(65 + oI)}. ${opt}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Part 2
+            const p2Box = document.getElementById('part2-container');
+            if(!currentData.p2 || currentData.p2.length === 0) {
+                document.getElementById('sec-part2').classList.add('hidden');
+            } else {
+                document.getElementById('sec-part2').classList.remove('hidden');
+                p2Box.innerHTML = currentData.p2.map((g, gI) => `
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm sm:text-base mb-4">${g.title}</h4>
+                        <div class="space-y-3">
+                            ${g.items.map((item, iI) => `
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-white p-3 rounded-lg border border-slate-200">
+                                    <span class="text-xs sm:text-sm text-slate-700 flex-1">${item.text}</span>
+                                    <div class="flex items-center space-x-4">
+                                        <label class="flex items-center space-x-1 cursor-pointer text-xs font-bold text-emerald-600">
+                                            <input type="radio" name="p2_${gI}_${iI}" value="true" class="accent-emerald-600"> <span>Đúng</span>
+                                        </label>
+                                        <label class="flex items-center space-x-1 cursor-pointer text-xs font-bold text-rose-600">
+                                            <input type="radio" name="p2_${gI}_${iI}" value="false" class="accent-rose-600"> <span>Sai</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Part 3
+            const p3Box = document.getElementById('part3-container');
+            if(!currentData.p3 || currentData.p3.length === 0) {
+                document.getElementById('sec-part3').classList.add('hidden');
+            } else {
+                document.getElementById('sec-part3').classList.remove('hidden');
+                p3Box.innerHTML = currentData.p3.map((item) => `
+                    <div class="space-y-2">
+                        <label class="font-semibold text-slate-800 text-sm sm:text-base block">${item.q}</label>
+                        <textarea rows="3" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Nhập bài làm của bạn..."></textarea>
+                        <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-lg">💡 <em>${item.hint}</em></p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            let p1Correct = 0, p1Total = currentData.p1 ? currentData.p1.length : 0;
+            let p2Correct = 0, p2Total = 0;
+
+            if(p1Total > 0) {
+                currentData.p1.forEach((item, qI) => {
+                    const sel = document.querySelector(`input[name="p1_${qI}"]:checked`);
+                    if (sel && parseInt(sel.value) === item.ans) p1Correct++;
+                });
+            }
+
+            if(currentData.p2 && currentData.p2.length > 0) {
+                currentData.p2.forEach((g, gI) => {
+                    g.items.forEach((item, iI) => {
+                        p2Total++;
+                        const sel = document.querySelector(`input[name="p2_${gI}_${iI}"]:checked`);
+                        if (sel && (sel.value === 'true') === item.ans) p2Correct++;
+                    });
+                });
+            }
+
+            // Tính tổng điểm trên thang 10
+            let totalMaxQuestions = p1Total + p2Total;
+            let totalCorrect = p1Correct + p2Correct;
+            let finalScore = totalMaxQuestions > 0 ? ((totalCorrect / totalMaxQuestions) * 10).toFixed(1) : "10.0";
+
+            document.getElementById('exam-form').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('timer-box').classList.add('hidden');
+
+            document.getElementById('result-subject-name').innerText = currentData.title;
+            document.getElementById('final-score').innerText = `${finalScore} / 10`;
+            document.getElementById('p1-correct').innerText = `${p1Correct}/${p1Total}`;
+            document.getElementById('p2-correct').innerText = `${p2Correct}/${p2Total}`;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function retryExam() {
+            selectSubject(
+                currentData === tinData ? 'tin' :
+                currentData === diaData ? 'dia' :
+                currentData === suData ? 'su' :
+                currentData === toanData ? 'toan' : 'cn'
+            );
+        }
+    </script>
+</body>
+</html>
